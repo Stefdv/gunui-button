@@ -197,7 +197,7 @@
         GunUi.gun.get(this.soul).path(this.prop).val(data=>{
           if(data) {
             this._fromGun=true;
-            this.active= data[this.key]
+            this.active= data[this.key] || data;
           }
         })
       }
@@ -206,7 +206,7 @@
          GunUi.gun.get(this.soul).path(this.prop).on(data=>{
           if(data) {
             this._fromGun=true;
-            this.active= data[this.key]
+            this.active= data[this.key] || data;
          }
        })
       }
