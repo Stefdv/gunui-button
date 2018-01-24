@@ -5,7 +5,7 @@ GunUi is a set of webcomponents that enables you - the frontend developer - to b
 
 
 ## GunUi-Button
-`gunui-button` is a Gun wrapper around [`paper-checkbox`](https://www.webcomponents.org/element/PolymerElements/paper-button/elements/paper-button)
+`gunui-button` is a Gun wrapper around [`paper-button`](https://www.webcomponents.org/element/PolymerElements/paper-button/elements/paper-button)
 
 #### Purpose of `gunui-button`
 * Visual control a boolean value in your Gun data.
