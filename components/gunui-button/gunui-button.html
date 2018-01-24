@@ -1,0 +1,218 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../gunui-base/gunui-mixin-api.html">
+
+
+<dom-module id="gunui-button">
+   <template>
+    <style>
+      :host {
+        display:inline-block;
+       --gunui-button-background-color:white;
+       --gunui-button-active-background-color:var(--gunui-button-background-color);
+       --gunui-button-color:black;
+       --gunui-button-active-color:var(--gunui-button-color);
+      }
+
+      :host([hidden]) {
+        display: none !important;
+      }
+      :host(.icon-button) paper-button {
+        min-width:0;
+        margin:0;padding: 0.4em;
+        --iron-icon-width:32px;
+        --iron-icon-height:32px;
+      }
+      paper-button {
+        color:var(--gunui-button-color);
+        background-color:var(--gunui-button-background-color);
+      }
+      paper-button[active] {
+        color:var(--gunui-button-active-color,var(--gunui-button-color));
+        background-color:var(--gunui-button-active-background-color,var(--gunui-button-background-color));
+      }
+      iron-icon {
+        margin-right:5px;
+      }
+
+      :host([suffix]) iron-icon {
+        margin-right:0;
+        margin-left:5px;
+      }
+
+    </style>
+      <paper-button 
+        id="button"
+        toggles 
+        active="{{active}}"
+        raised="[[raised]]" 
+        noink="[[noink]]"
+        disabled="[[disabled]]"
+        on-tap="_localAction">
+
+        <template is="dom-if" if="{{_checkPrefixIcon(icon,suffix)}}">
+          <iron-icon icon="[[icon]]"></iron-icon>
+        </template>
+
+          <slot id="slot"></slot>
+
+        <template is="dom-if" if="{{_checkSuffixIcon(icon,suffix)}}">
+          <iron-icon hidden$="{{!icon}}" icon="[[icon]]"></iron-icon>
+        </template>
+
+      </paper-button>
+ 
+  </template>
+
+  <script>
+   if (!Polymer.Element) {
+    throw new Error(`Unexpected Polymer version ${Polymer.version}, expected v2.0.0 or later.`);
+   }
+    
+
+    /**
+     * `gun-ui-button`
+     *
+     * uses GunUi.MixinAPI ( gunui-mixin-api )
+     * requires <gunui-base> in your main file
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    
+
+    class GunUiButton extends GunUi.MixinAPI(Polymer.Element) {
+
+      static get is() { return 'gunui-button'; }
+
+      static get properties() {
+        return {
+          /**
+           * if you want an icon 
+           * syntax is like with `iron-icon`
+           * @type {String}
+           */
+          icon:{
+            type:String
+          },
+          /**
+           * If you want the icon as a suffix
+           * @type {Boolean}
+           */
+          suffix:{
+            type:Boolean,
+            value:false
+          },
+          /**
+           * active state of the button
+           * Note that if you set it thru javascript, the state will change in Gun
+           * @type {Boolean}
+           */
+          active:{
+            type:Boolean,
+            reflectToAttribute:true,
+            notify:true,
+            observer:'_activeChanged' 
+          },
+          /**
+           * puts a shadow on the button
+           * @type {Boolean}
+           */
+          raised: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+          },
+          /**
+           * default 'active' -> {active:true}
+           * You might need something like 'state:true' or 'valid:true' 
+           * @type {String}
+           */
+          key:{
+            type:String,
+            value:'active'
+          },
+          /**
+           * disable the ink effect
+           * @type {Boolean}
+           */
+          noink:Boolean,
+          /**
+           * Disable the button
+           * @type {Boolean}
+           */
+          disabled:Boolean,
+          /**
+           * the user changed the state, not Gun
+           * @type {Boolean}
+           */
+          _isLocal:Boolean
+        }
+      }
+
+
+      _checkPrefixIcon(icon,suffix){
+        return (icon && !suffix)
+      }
+
+      _checkSuffixIcon(icon,suffix) {
+        return (icon && suffix)
+      }
+
+      hasGun() {
+        if(this.soul) { // at least give me that !
+          this._hasGun && this.subscribe ? this._subscribe() : this._getInitialData();
+        } else {
+          GunUi.config.dev && console.info('You did not provide a soul!')
+        }
+      }
+
+
+      ready() {
+        super.ready();
+        // check if it's a 'icon only' button
+        let sl= Polymer.dom(this.$.slot).getDistributedNodes()[0]
+         if(!sl) {
+          this.classList.add('icon-button')
+         }
+      }
+
+      /**
+       * If the user changed the state we have to know
+       */
+      _localAction(e) {
+        this._fromGun = false;
+      }
+
+      /**
+       * only store it in Gun if it was a local action
+       */
+      _activeChanged(active) {
+        !this._fromGun && this.soul &&  GunUi.gun.get(this.soul).path(this.prop+'.' + this.key).put(active)
+       
+      }
+
+      _getInitialData() {
+        GunUi.gun.get(this.soul).path(this.prop).val(data=>{
+          if(data) {
+            this._fromGun=true;
+            this.active= data[this.key] || data;
+          }
+        })
+      }
+
+      _subscribe(){
+         GunUi.gun.get(this.soul).path(this.prop).on(data=>{
+          if(data) {
+            this._fromGun=true;
+            this.active= data[this.key] || data;
+         }
+       })
+      }
+    };
+
+    customElements.define(GunUiButton.is, GunUiButton);
+    GunUi.GunUiButton = GunUiButton;
+  </script>
+</dom-module>
