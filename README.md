@@ -61,7 +61,7 @@ If you don't fully understand the purpose of gunui take a look at some of the Gu
 ### property elements
 * [gunui-button](https://stefdv.github.io/gunui-button/components/gunui-button/demo/index.html) Visual control of a Boolean value in your Gun data
 * [gunui-progress](https://stefdv.github.io/gunui-progress/components/gunui-progress/demo/index.html) Visualize a Numeric value in your Gun data
-* [gunui-slider](https://stefdv.github.io/gunui-sider/components/gunui-slider/demo/index.html) Visual control of a Numeric value in your Gun data.
+* [gunui-slider](https://stefdv.github.io/gunui-slider/components/gunui-slider/demo/index.html) Visual control of a Numeric value in your Gun data.
 
 ## Contact
 I am not much of an e-mail reader, but please post issues and questions.
