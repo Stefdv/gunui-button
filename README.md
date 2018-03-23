@@ -1,3 +1,5 @@
+## Sorry, there has been some API changes...updating
+
 #### GunUi elements
 GunUi is a set of webcomponents that enables you - the frontend developer - to build complex - [Gun](https://github.com/amark/gun) - applications without writing any javascript.<br>Just link an element to a 'data-point' in your Gun data by setting attributes.<br>
 `<gunui-button soul="lights" prop="hall.ceiling">Light</gunui-button>` and you're all set.
